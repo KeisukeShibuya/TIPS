@@ -115,3 +115,8 @@ docker run -d -p 5901:5901 my-ubuntu-vnc
 - [MacでLinux環境をサクッとつくる](https://qiita.com/c00lkid/items/ebc4e768bff92214f8f9)
 - [【MacでLinuxを使う】Dockerを使って環境を構築する方法](https://www.kyonakablog.com/linux/how-to-build-linux-environment-using-docker/)
 
+# ElasticMQ
+
+```shell
+docker run -d -p 9324:9324 --name elasticmq softwaremill/elasticmq-native
+```
