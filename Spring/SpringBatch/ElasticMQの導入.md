@@ -1,3 +1,5 @@
+# ElasticMQの導入とSpring Batch連携
+
 はい、**ElasticMQを用いた開発環境でのSQSエミュレーション**はとても手軽にできます。  
 ElasticMQは「自己完結型」「Dockerで一発起動可能」「AWS SDK for Javaとも互換」なので、Spring Batch＋SQSの開発・テストに最適です。
 
@@ -9,7 +11,7 @@ ElasticMQは「自己完結型」「Dockerで一発起動可能」「AWS SDK for
 
 ### 1-1. コマンド一発
 
-```textmate
+```shell
 docker run -d -p 9324:9324 --name elasticmq softwaremill/elasticmq-native
 ```
 
@@ -27,7 +29,7 @@ docker run -d -p 9324:9324 --name elasticmq softwaremill/elasticmq-native
 
 - AWS CLIは"ダミー"のcredentialsでOKです（例：`dummy_profile`として作成）
 
-```textmate
+```shell
 aws --endpoint-url http://localhost:9324 sqs create-queue --queue-name test-queue
 ```
 
@@ -83,7 +85,7 @@ SQS Web管理用途に[elasticmq-rest-sqs](https://github.com/softwaremill/elast
 
 ## 6. AWS CLIでのメッセージ送信・受信例
 
-```textmate
+```shell
 # メッセージ送信
 aws --endpoint-url http://localhost:9324 sqs send-message --queue-url http://localhost:9324/queue/test-queue --message-body '{"jobName":"sqsJob","params":{"inputValue":"ElasticMQテスト"}}'
 # メッセージ受信
@@ -101,3 +103,55 @@ aws --endpoint-url http://localhost:9324 sqs receive-message --queue-url http://
 ---
 
 ご不明点があれば、ElasticMQ導入やSpring連携、テスト支援についても続けてご案内できます！
+
+# AWS CLIのインストール
+
+はい、**AWS CLI（AWS Command Line Interface）をMacBook Airで利用するには、事前にAWS CLIのインストール（ダウンロード）が必要**です。
+
+---
+
+### AWS CLIインストール手順（Macの場合）
+
+#### 1. **公式パッケージインストーラを使う方法（推奨）**
+
+1. [AWS CLI公式インストーラ (最新版)](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/getting-started-install.html) にアクセス
+2. Mac（x86_64 または arm64、Apple Siliconなど）用のインストーラをダウンロード
+3. ターミナルで以下のコマンドを実行
+
+```shell
+curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+sudo installer -pkg AWSCLIV2.pkg -target /
+```
+
+
+#### 2. **Homebrewを使う方法**
+
+Homebrewがインストールされている場合は、以下のコマンドでインストールできます。
+
+```shell
+brew install awscli
+```
+
+
+---
+
+### インストール後の確認
+
+インストールできたか確認するには：
+
+```shell
+aws --version
+```
+
+
+が実行できればOKです。
+
+---
+
+### まとめ
+
+- **AWS CLIは事前にダウンロード・インストールが必要**
+- 公式インストーラ または Homebrew で簡単に導入可能
+- インストール後は`aws --version`で確認できます
+
+ご不明な点があれば、続けてご質問ください！
