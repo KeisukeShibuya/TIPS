@@ -41,29 +41,60 @@ aws --endpoint-url http://localhost:9324 sqs create-queue --queue-name test-queu
 
 ## 3. SpringアプリからElasticMQを参照する設定例
 
-`application-dev.yml` などで
+### `application-dev.yml`
 
 ```yaml
 aws:
   sqs:
-    queue-url: http://localhost:9324/queue/test-queue
-```
-
-
-Spring BootのSQSクライアント（SDK v2）設定例：
-
-```java
-@Bean
-public SqsClient sqsClient() {
-    return SqsClient.builder()
-        .endpointOverride(URI.create("http://localhost:9324"))    // ここをElasticMQに設定
-        .region(Region.AP_NORTHEAST_1) // 適当でOK
-        .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("x", "x")))
-        .build();
-}
+    endpoint: http://localhost:9324 # ElasticMQのエンドポイント
+    region: ap-northeast-1
+    access-key: accessKey
+    secret-key: secretKey
 ```
 
 - 認証やRegionはダミーでOK（ElasticMQは認証無しで動作します）
+
+### `JavaConfig` クラス
+
+```java
+@Configuration
+@RequiredArgsConstructor
+public class SqsConfig {
+
+    // SQSの設定プロパティを注入
+    private final SqsConfigurationProperties sqsConfigurationProperties;
+    
+    @Bean
+    public SqsClient sqsClient() {
+        return SqsClient.builder()
+                .endpointOverride(URI.create(sqsConfigurationProperties.getEndpoint()))
+                .region(Region.of(sqsConfigurationProperties.getRegion()))
+                .credentialsProvider(
+                        StaticCredentialsProvider.create(
+                                AwsBasicCredentials.create(
+                                        sqsConfigurationProperties.getAccessKey()
+                                        , sqsConfigurationProperties.getSecretKey()
+                                )
+                        )
+                )
+                .build();
+    }
+}
+```
+
+### `@ConfigurationProperties` クラス
+
+```java
+@Data
+@Component
+@ConfigurationProperties(prefix = "aws.sqs")
+public class SqsConfigurationProperties {
+    private String endpoint;
+    private String region;
+    private String accessKey;
+    private String secretKey;
+}
+```
 
 ---
 
@@ -155,3 +186,56 @@ aws --version
 - インストール後は`aws --version`で確認できます
 
 ご不明な点があれば、続けてご質問ください！
+
+# `SqsClient` を利用するための依存関係追加
+
+はい、**`SqsClient` を利用するには依存関係の追加が必須です**。
+
+`SqsClient` は AWS SDK for Java v2 の中に含まれるため、  
+**Maven や Gradle で `software.amazon.awssdk:sqs` の依存を追加する必要があります**。
+
+---
+
+## 依存モジュール追加例
+
+### Maven の場合
+
+```xml
+<dependency>
+  <groupId>software.amazon.awssdk</groupId>
+  <artifactId>sqs</artifactId>
+  <version>2.x.x</version> <!-- 最新バージョンに置き換えてください -->
+</dependency>
+```
+
+
+### Gradle の場合
+
+```kotlin
+implementation("software.amazon.awssdk:sqs:2.x.x") // 最新バージョンに置き換え
+```
+
+または
+```groovy
+implementation 'software.amazon.awssdk:sqs:2.x.x' // 最新バージョンに置き換え
+```
+
+
+※ さらに、`SqsClient` の作成には `region` などを指定するため、  
+`software.amazon.awssdk:regions` も一緒に引っ張られます（通常は自動で解決されます）。
+
+---
+
+## まとめ
+
+- **`SqsClient` は AWS SDK for Java (v2) の一部なので、依存追加が絶対必要**
+- 依存名：`software.amazon.awssdk:sqs`
+- Spring Boot/Spring Batchでも、同じく「明示的な追加」が必要です
+
+### 補足
+- 古い v1 系の SDK には `AmazonSQSClient` がありますが、**`SqsClient` は v2 専用です**。
+- ElasticMQ 等のスタブサーバーでも必ずこの依存が必要です。
+
+---
+
+ご不明や具体的な build ファイル例が必要なら、お知らせください！
