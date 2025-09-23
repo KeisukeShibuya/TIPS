@@ -58,6 +58,7 @@ aws:
 
 ```java
 @Configuration
+@EnableConfigurationProperties(SqsConfigurationProperties.class)
 @RequiredArgsConstructor
 public class SqsConfig {
 
@@ -86,7 +87,6 @@ public class SqsConfig {
 
 ```java
 @Data
-@Component
 @ConfigurationProperties(prefix = "aws.sqs")
 public class SqsConfigurationProperties {
     private String endpoint;
