@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# JetBrains / IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Java / JVM
+build/
+target/
+.gradle/
+
+# Node.js
+node_modules/
+
+# Logs
+*.log
