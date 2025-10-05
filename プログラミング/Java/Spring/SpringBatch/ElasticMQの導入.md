@@ -239,3 +239,26 @@ implementation 'software.amazon.awssdk:sqs:2.x.x' // 最新バージョンに置
 ---
 
 ご不明や具体的な build ファイル例が必要なら、お知らせください！
+
+# 注意点
+
+以下の設定を入れていないと、アプリが起動してもSpring BatchのCLIツールのような扱いになり、即終了します。
+
+## `application.properties`
+
+```properties
+spring.batch.job.enabled=true
+```
+
+## アプリケーションクラス
+
+```java
+@SpringBootApplication
+@EnableScheduling   // これがないとNG!!
+public class DemoApplication {
+    
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+```
