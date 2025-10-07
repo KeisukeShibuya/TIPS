@@ -242,15 +242,17 @@ implementation 'software.amazon.awssdk:sqs:2.x.x' // 最新バージョンに置
 
 # 注意点
 
+## アプリケーションを起動してもすぐ終了する
+
 以下の設定を入れていないと、アプリが起動してもSpring BatchのCLIツールのような扱いになり、即終了します。
 
-## `application.properties`
+### `application.properties`
 
 ```properties
 spring.batch.job.enabled=true
 ```
 
-## アプリケーションクラス
+### アプリケーションクラス
 
 ```java
 @SpringBootApplication
@@ -261,4 +263,41 @@ public class DemoApplication {
         SpringApplication.run(DemoApplication.class, args);
     }
 }
+```
+
+## ElasticMQに対して操作を行うと、認証設定を求められる
+
+キューの作成などを実行しようとすると、以下のエラーが発生することがあります。
+
+```
+Unable to locate credentials. You can configure credentials by running "aws configure".
+```
+
+AWS CLIの仕様上、アクセスキー等の認証情報」が未設定の場合、必ずこの警告（エラー）が出ます。
+アクセスキー・シークレットアクセスキーの指定は必須です。
+ただし、ElasticMQは認証を要求しないため、**ダミーの値で問題ありません**。
+
+### 解決法1: 一時的な環境変数指定で実行する
+
+各コマンドの前に「ダミーの認証情報」を入れて実行します。
+
+```shell
+AWS_ACCESS_KEY_ID=dummy AWS_SECRET_ACCESS_KEY=dummy aws --endpoint-url http://localhost:9324 sqs create-queue \
+  --queue-name dbRegisterQueue \
+  --region ap-northeast-1
+```
+
+同様にsend-messageなども実行できます。
+
+### 解決法2: `aws configure` でダミー値を設定する
+
+一度だけ「aws configure」を実行し、すべてダミー値（例：dummy）で設定してもOKです。この場合、毎回環境変数を付ける必要がなくなります。
+
+```shell
+aws configure
+# 対話形式で
+# AWS Access Key ID [None]: dummy
+# AWS Secret Access Key [None]: dummy
+# Default region name [None]: ap-northeast-1
+# Default output format [None]: json
 ```
