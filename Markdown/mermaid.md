@@ -5,7 +5,7 @@
 
 ---
 
-# Mermaid記法の概要
+# Mermaid 記法の概要
 
 - **目的**：テキストで図（フローチャート、シーケンス図、クラス図など）を簡単に作成する。
 - **特徴**：コードエディタやドキュメント内での可視化が容易。
@@ -113,20 +113,20 @@ stateDiagram-v2
 ### 基本構文
 ```mermaid
 erDiagram
-    顧客 ||--o{ 注文 : "行う"
-    注文 }|..|{ 商品 : "含む"
-    顧客 {
-      string 名前
-      string メールアドレス
+    "顧客" ||--o{ "注文" : "行う"
+    "注文" }|..|{ "商品" : "含む"
+    "顧客" {
+      string customerName "顧客名"
+      string email "メールアドレス"
     }
-    商品 {
-      int 商品ID
-      string 商品名
-      float 価格
+    "商品" {
+      int itemID "商品ID"
+      string itemName "商品名"
+      float unitPrice "単価"
     }
-    注文 {
-      int 注文ID
-      date 注文日
+    "注文" {
+      int orderID "注文ID"
+      date orderDate "注文日"
     }
 ```
 
@@ -157,20 +157,20 @@ pie
 
 Mermaidでは以下のような図も記述できます（2024年時点）:
 
-| No. | ダイアグラム名        | キーワード         | 例記法/説明                  |
-|-----|----------------------|--------------------|------------------------------|
-| 1   | フローチャート        | flowchart          | `flowchart TD ...`           |
-| 2   | シーケンス図          | sequenceDiagram    | `sequenceDiagram ...`        |
-| 3   | クラス図              | classDiagram       | `classDiagram ...`           |
-| 4   | ガントチャート        | gantt              | `gantt ...`                  |
-| 5   | 状態遷移図            | stateDiagram       | `stateDiagram-v2 ...`        |
-| 6   | ER図（エンティティ図）| erDiagram          | `erDiagram ...`              |
-| 7   | パイチャート          | pie                | `pie ...`                    |
-| 8   | ジャーニーマップ      | journey            | `journey ...`                |
-| 9   | 要件図                | requirementDiagram | `requirementDiagram ...`     |
-| 10  | タイムライン          | timeline           | `timeline ...`               |
-| 11  | Gitグラフ             | gitGraph           | `gitGraph ...`               |
-| 12  | ワイヤーフレーム      | wireframe          | `wireframe ...`（実験的）      |
+| No. | ダイアグラム名      | キーワード              | 例記法/説明                   |
+|-----|--------------|--------------------|--------------------------|
+| 1   | フローチャート      | flowchart          | `flowchart TD ...`       |
+| 2   | シーケンス図       | sequenceDiagram    | `sequenceDiagram ...`    |
+| 3   | クラス図         | classDiagram       | `classDiagram ...`       |
+| 4   | ガントチャート      | gantt              | `gantt ...`              |
+| 5   | 状態遷移図        | stateDiagram       | `stateDiagram-v2 ...`    |
+| 6   | ER図（エンティティ図） | erDiagram          | `erDiagram ...`          |
+| 7   | パイチャート       | pie                | `pie ...`                |
+| 8   | ジャーニーマップ     | journey            | `journey ...`            |
+| 9   | 要件図          | requirementDiagram | `requirementDiagram ...` |
+| 10  | タイムライン       | timeline           | `timeline ...`           |
+| 11  | Gitグラフ       | gitGraph           | `gitGraph ...`           |
+| 12  | ワイヤーフレーム     | wireframe          | `wireframe ...`（実験的）     |
 
 ---
 
@@ -196,7 +196,7 @@ journey
 
 # 参考リンク
 
-- [Mermaid公式ドキュメント](https://mermaid-js.github.io/mermaid/#/)
+- [Mermaid 公式ドキュメント](https://mermaid-js.github.io/mermaid/#/)
 - [Cheat Sheet（英語）](https://mermaid-js.github.io/mermaid/#/n00b-cheat-sheet)
 
 ---
